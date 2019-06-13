@@ -64,9 +64,10 @@ module.exports = (on, config) => {
 
       if (cdp) {
         log('starting code coverage')
+        const callCount = true
         return Promise.all([
           cdp.Profiler.enable(),
-          cdp.Profiler.startPreciseCoverage()
+          cdp.Profiler.startPreciseCoverage(callCount)
         ])
       }
 
@@ -79,7 +80,14 @@ module.exports = (on, config) => {
       if (cdp) {
         log('stopping code coverage')
         return cdp.Profiler.takePreciseCoverage().then(result => {
-          console.log('%o', result)
+          // slice out unwanted scripts (like Cypress own specs)
+          // minimatch would be better?
+          const appFiles = /app\.js$/
+          const appScripts = result.result.filter(script =>
+            appFiles.test(script.url)
+          )
+
+          console.log('%o', appScripts[0].functions)
 
           return cdp.Profiler.stopPreciseCoverage()
         })

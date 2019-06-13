@@ -13,4 +13,5 @@ afterEach(() => {
 it('adds numbers', () => {
   cy.visit('/')
   cy.contains('Hello world').should('be.visible')
+  cy.wait(1000)
 })
