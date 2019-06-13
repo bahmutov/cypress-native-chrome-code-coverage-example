@@ -21,3 +21,4 @@ The output is saved to `coverage/index.html`
 ## More info
 
 - [A quick look at how Chrome's JavaScript code coverage feature works](https://www.mattzeunert.com/2017/03/29/how-does-chrome-code-coverage-work.html)
+- Istanbul [coverage format](https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md)
