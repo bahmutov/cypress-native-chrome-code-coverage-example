@@ -1,10 +1,25 @@
 const CDP = require('chrome-remote-interface')
+// const pti = require('puppeteer-to-istanbul')
+const v8ToIstanbul = require('v8-to-istanbul')
+const url = require('url')
+const path = require('path')
+const fs = require('fs')
+const mkdirp = require('mkdirp')
+
+const fromRoot = path.join.bind(null, __dirname, '..', '..')
+const v8CoverageFolder = fromRoot('.v8-coverage')
 
 function log (msg) {
   console.log(msg)
 }
 
 let cdp
+
+const makeFolder = () => {
+  if (!fs.existsSync(v8CoverageFolder)) {
+    mkdirp.sync(v8CoverageFolder)
+  }
+}
 
 function browserLaunchHandler (browser = {}, args) {
   if (!['chrome'].includes(browser.family)) {
@@ -83,13 +98,22 @@ module.exports = (on, config) => {
           // slice out unwanted scripts (like Cypress own specs)
           // minimatch would be better?
           const appFiles = /app\.js$/
-          const appScripts = result.result.filter(script =>
+          result.result = result.result.filter(script =>
             appFiles.test(script.url)
           )
 
-          console.log('%o', appScripts[0].functions)
+          makeFolder()
+
+          const filename = path.join(v8CoverageFolder, 'coverage.json')
+          fs.writeFileSync(filename, JSON.stringify(result, null, 2) + '\n')
+
+          // const istanbulReports =
+          // pti.write(result)
+          // console.log('%o', appScripts[0].functions)
+          // console.log('%o', istanbulReports)
 
           return cdp.Profiler.stopPreciseCoverage()
+          // })
         })
       }
 
