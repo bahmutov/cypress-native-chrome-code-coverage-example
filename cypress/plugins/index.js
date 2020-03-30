@@ -31,13 +31,15 @@ function browserLaunchHandler (browser, launchOptions) {
     )
   }
 
-  const rdp = 40000 + Math.round(Math.random() * 25000)
-
-  if (browser.name === 'chrome') {
-    launchOptions.args.push(`--remote-debugging-port=${rdp}`)
+  // find how Cypress is going to control Chrome browser
+  const rdpArgument = launchOptions.args.find(arg => arg.startsWith('--remote-debugging-port'))
+  if (!rdpArgument) {
+    return log(`Could not find launch argument that starts with --remote-debugging-port`)
   }
+  const rdp = parseInt(rdpArgument.split('=')[1])
 
-  log(' Attempting to connect to Chrome Debugging Protocol')
+  // and use this port ourselves too
+  log(` Attempting to connect to Chrome Debugging Protocol on port ${rdp}`)
 
   const tryConnect = () => {
     new CDP({
