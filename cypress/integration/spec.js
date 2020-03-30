@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 
-beforeEach(() => {
-  console.log('before test')
-  cy.task('beforeTest')
-})
+// beforeEach(() => {
+//   console.log('before test')
+//   cy.task('beforeTest')
+// })
 
-afterEach(() => {
-  console.log('after test')
-  cy.task('afterTest')
-})
+// afterEach(() => {
+//   console.log('after test')
+//   cy.task('afterTest')
+// })
 
 it('adds numbers', () => {
   // cy.wait(1000)
