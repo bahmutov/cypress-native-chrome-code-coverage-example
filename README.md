@@ -9,14 +9,12 @@
 
 ```shell
 npm run cy:open
-npm run convert
 npm run report
 ```
 
 The output is saved to `coverage/index.html`
 
 ![Coverage](images/coverage.png)
-
 
 ## More info
 
