@@ -21,19 +21,20 @@ const makeFolder = () => {
   }
 }
 
-function browserLaunchHandler (browser = {}, args) {
-  if (!['chrome'].includes(browser.family)) {
+function browserLaunchHandler (browser, launchOptions) {
+  console.log('browser is', browser)
+  if (browser.name !== 'chrome') {
     return log(
-      ` Warning: An unsupported browser family was used, output will not be logged to console: ${
-        browser.family
+      ` Warning: An unsupported browser is used, output will not be logged to console: ${
+        browser.name
       }`
     )
   }
 
   const rdp = 40000 + Math.round(Math.random() * 25000)
 
-  if (browser.family === 'chrome') {
-    args.push(`--remote-debugging-port=${rdp}`)
+  if (browser.name === 'chrome') {
+    launchOptions.args.push(`--remote-debugging-port=${rdp}`)
   }
 
   log(' Attempting to connect to Chrome Debugging Protocol')
@@ -65,8 +66,6 @@ function browserLaunchHandler (browser = {}, args) {
   }
 
   tryConnect()
-
-  return args
 }
 
 module.exports = (on, config) => {
