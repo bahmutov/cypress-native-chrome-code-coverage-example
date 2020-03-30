@@ -81,9 +81,11 @@ module.exports = (on, config) => {
       if (cdp) {
         log('starting code coverage')
         const callCount = true
+        const detailed = true
+
         return Promise.all([
           cdp.Profiler.enable(),
-          cdp.Profiler.startPreciseCoverage(callCount)
+          cdp.Profiler.startPreciseCoverage(callCount, detailed)
         ])
       }
 

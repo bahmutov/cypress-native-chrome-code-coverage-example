@@ -1,8 +1,10 @@
 function add (a, b) {
+  console.log('in function add')
   return a + b
 }
 
 function sub (a, b) {
+  console.log('in function sub')
   return a - b
 }
 
