@@ -52,6 +52,8 @@ function browserLaunchHandler (browser, launchOptions) {
     )
   }
 
+  console.log('all browser arguments')
+  console.log(launchOptions.args.join('\n'))
   // find how Cypress is going to control Chrome browser
   const rdpArgument = launchOptions.args.find(arg => arg.startsWith('--remote-debugging-port'))
   if (!rdpArgument) {
@@ -60,7 +62,7 @@ function browserLaunchHandler (browser, launchOptions) {
   const rdp = parseInt(rdpArgument.split('=')[1])
 
   // and use this port ourselves too
-  log(` Attempting to connect to Chrome Debugging Protocol on port ${rdp}`)
+  log(`plugin: Attempting to connect to Chrome Debugging Protocol on port ${rdp}`)
 
   const tryConnect = () => {
     new CDP({
@@ -68,7 +70,7 @@ function browserLaunchHandler (browser, launchOptions) {
     })
       .then(_cdp => {
         cdp = _cdp
-        log(' Connected to Chrome Debugging Protocol')
+        log('plugin: Connected to Chrome Debugging Protocol')
 
         /** captures logs from the browser */
         // cdp.Log.enable()
@@ -82,6 +84,19 @@ function browserLaunchHandler (browser, launchOptions) {
           log(' Chrome Debugging Protocol disconnected')
           cdp = null
         })
+
+        // crashes the current tab
+        // return cdp.Page.navigate({ url: 'chrome://crash' })
+        // hangs the current tab
+        return cdp.Page.navigate({ url: 'chrome://hang' })
+
+        // return cdp.Page.navigate({ url: 'chrome://memory-exhaust/' })
+
+        // return cdp.Page.navigate({ url: 'chrome://shorthang' })
+
+        // https://chromedevtools.github.io/devtools-protocol/tot/Browser/#method-crash
+        // return cdp.Browser.crash()
+
       })
       .catch(() => {
         setTimeout(tryConnect, 100)
